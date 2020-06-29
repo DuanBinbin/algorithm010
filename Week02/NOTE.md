@@ -1,5 +1,9 @@
 学习笔记
 
+[TOC]
+
+
+
 # 一、基础知识
 
 ## 哈希表、映射、集合
@@ -143,9 +147,178 @@ postOrder(r) = postOrder(r->left)->postOrder(r->right)->print r
 
 
 
+```java
+public void Heap{
+    private int[] a; //数组，从下标1开始存储数据
+    private int n; //堆可以存储的最大数据个数
+    private int count; //堆中已经存储的数据个数
+    
+    public Head(int capacity){
+        a = new int[capacity + 1];
+        n = capacity;
+        count = 0;
+    }
+    
+    public void insert(int data){
+        if(count >= n) return; //堆满了
+        ++count;
+        a[count] = data;
+        int i = count;
+        while(i / 2 > 0 && a[i] > a[i / 2]){
+            swap(a, i, i / 2);// swap()函数作用：交换小标i和i/2的两个元素
+            i = i / 2;
+        }
+    }
+    
+    public void removeMax(){
+        if(count == 0) return -1; //堆中没有数据
+        a[1] = a[count];
+        --count;
+        heapify(a, count, 1);
+    }
+    
+    private void heapify(int[] a, int n, int i){ //自上往下堆化
+        while(true){
+            int maxPos = i;
+            if(i * 2 <= n && a[i] < a[i * 2]) maxPos = i * 2;
+            if(i * 2 + 1 <= n && a[maxPos] < a[i * 2 + 1]) maxPos = i * 2 + 1;
+            if(maxPos == i) break;
+            swap(a, i, maxPos);
+            i = maxPos;
+        }
+    }
+}
+```
+
+### 堆的常见应用
+
+优先级队列：郝福曼编码、图的最短路径、最小生成树算法
+
+利用堆求 Top K
+
+利用堆求中位数
+
+
+
+### 图
+
+跟树比起来，图是一张更加复杂的线性表结构。图中的元素叫做**顶点**(vertex)，图中的一个顶点可以与任意其他顶点建立关系，这种关系叫做**边**(edge)。跟顶点相连接的边的条数，叫顶点的**度**(degree)。
+
+#### 如何在内存中存储图？
+
+- 邻接矩阵(Adjacency Matrix)
+
+> 缺点是比较浪费空间，优点是查询效率高，方便矩阵运算
+
+- 邻接表(Adjacency List)
+
+>邻接表存储方法中每个顶点都对应一个链表，存储于其相连接的其他顶点，优点是存储空间小，但是链表查询不便。邻接表升级的方法是将链表换成更加高效的动态数据结构，比如平衡二叉树、调表、散列表。
+
+
+
+```java
+//无向图
+public class Graph{
+    private int v; //顶点的个数
+    private LinkedList<Integer> adj[];
+    private boolean found = false;// 全局变量或者类成员变量
+    
+    public Graph(int v){
+        this.v = v;
+        adj = new LinkedList[v];
+        for (int i = 0; i < v; ++i){
+            adj[i] = new LinkedList<>();
+        }
+    }
+    
+    public void addEdge(int a, int t){ //无向图一条边存两次
+        adj[s].add(t);
+        adj[t].add(s);
+    }
+    
+    //广度优先搜索；时间复杂度O(E);空间复杂度O(V)
+    public void bfs(int s, int t){
+        if(s == t) return;
+        
+        //visited 是用来记录已经被访问的顶点
+        boolean[] visited = new boolean[v];        
+        visited[s] = true;
+        
+        //queue 是用来存储已经被访问，但相连的顶点还没有被访问的顶点
+        Queue<Integer> queue = new LinkedList();
+        queue.add(s);
+        
+        //prev 是用来记录搜索路径
+        int[] prev = new int[t];
+        for (int i = 0; i < v; ++i){
+            prev[i] = -1;
+        }
+        
+        while (queue.size() != 0){
+            int w = queue.poll();
+            for (int i = 0; i < adj[w].size(); ++i){
+                int q = adj[w].get[i];
+                if(!visited[q]){
+                    prev[q] = w;
+                    if (q == t){
+                        print(prev, s, t);
+                        return;
+                    }
+                    visited[q] = true;
+                    queue.add[q];
+                }
+            }
+        }
+    }
+    
+    private void print(int[] prev, int s, int t){ //递归打印s -> t 的路径
+        if (prev[t] != -1 && t != s){
+            print(prev, s, prev[t]);
+        }
+        System.out.print(t + " ");
+    }   
+    
+    public void dfs(int s, int t){
+        found = false;
+        boolean[] visited = new boolean[v];
+        int[] prev = new int[v];
+        
+        for (int i = 0; i < v; ++i){
+            prev[i] = -1;
+        }
+        
+        recurDfs(s, t, visited, prev);
+        print(prev, s, t);
+    }
+    
+    private void recurDfs(int w, int t, boolean[] visited, int[] prev){
+        if(found == true) return;
+        visited[w] = true;
+        if (w == t){
+            found = true;
+            return;
+        }
+        
+        for (int i = 0; i < adj[w].size(); ++i){
+            int q = adj[w].get(i);
+            if (!visited[q]){
+                prev[q] = w;
+                recurDfs(q, t, visited, prev);
+            }
+        }
+    }
+}
+```
+
+
+
+
+
 # 二、课后作业
 
 ## 1.关于 HashMap 的总结 
 
 ## 2.为什么树的面试题解法一般都是递归
+
+## 3.关于Java中PriorityQueue的总结
 
