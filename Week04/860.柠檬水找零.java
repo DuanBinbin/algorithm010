@@ -12,6 +12,7 @@ class Solution {
         }
 
         int five = 0, ten = 10;
+        
         for (int bill : bills) {
             if (bill == 5){
                 five++;
