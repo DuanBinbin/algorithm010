@@ -237,6 +237,7 @@ class solution{
         return 0；
     }
     
+    //动态规划-一维数组
     public int knapsack2(int[] items, int n, int w){
         boolean[] states = new boolean[w + 1]; //默认值false
         states[0] = true; //第一行的数据要特殊处理，可以利用哨兵优化
@@ -260,6 +261,44 @@ class solution{
         }
         
         return 0;
+    }
+    
+    //
+    public int knapsack3(int[] weight, int[] value, int n, int w){
+        int[][] states = new int[n][w + 1];
+        for (int i = 0; i < n; ++i){
+            for (int j = 0; j < w + 1; ++j){
+                states[i][j] == -1;
+            }
+        }
+        
+        states[0][0] = 0;
+        
+        if (weight[0] <= w){
+            states[0][weight[0]] = value[0];
+        }
+        
+        for (int i = 1; i < n; ++i){ //动态规划状态转移
+        	for (int j = 0; j <= w; ++j){ // 不选择第i个物品
+                if (states[i - 1][j] >= 0) states[i][j] = states[i - 1][j];
+            }    
+            
+            for (int j = 0; j <= w - weight[i]; ++j){ //选择第i个物品
+                if (states[i - 1][j] >= 0){
+                    int v = states[i - 1][j] + value[i];
+                    if (v > states[i][j + weight[i]]){
+                        states[i][j + weight[i]] = v;
+                    }
+                }
+            }
+        }
+        
+        // 找出最大值
+        int maxValue = -1;
+        for (int j = 0; j <= w; ++j){
+            if (states[n - 1][j] > maxValue) maxValue = states[n - 1][j];
+        }
+        return maxValue;
     }
 }
 ```
