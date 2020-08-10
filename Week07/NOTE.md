@@ -190,6 +190,70 @@ public:
 		return parent[i];
 	}
 
+	void unite(int x, int y) {
+		int rootx = find(x);
+		int rooty = find(y);
+		if (rootx != rooty) {
+			if (rank[rootx] < rank[rooty]) {
+				swap(rootx, rooty);
+			}
+			parent[rooty] = rootx;
+			if (rank[rootx] == rank[rooty]) rank[rootx] += 1;
+			--count;
+		}
+	}
+	
+	int getCount() const {
+		return count;
+	}
+	
+private:
+	vector<int> parent;
+	vector<int> rank;
+	int count;
 }
 ```
+
+
+
+# 高级搜索
+
+
+
+# AVL树
+
+1. AVL树是一种平衡二叉搜索树
+2. 每个结点村balance factor = {-1，0, 1}
+3. 四种旋转操作
+
+不足：结点需要存储额外信息、且调整次数频繁
+
+
+
+# 红黑树
+
+红黑树是一种`近似平衡`的二叉搜索树(Binary Search Tree)，它能够确保任何一个结点的左右子树的`高度差小于两倍`。具体来说，红黑树是满足如下条件的二叉搜索树：
+
+1. 每个节点要么是红色，要么是黑色。
+2. 根节点永远是黑色。
+3. 所有的叶子节点都是空节点(即null)，并且是黑色的。
+4. 每个红色节点的两个子节点都是黑色(从每个叶子到根的路径上不会有两个连续的红色节点)。
+5. 从任一节点到其子树中每个叶子节点的路径都包含相同数量了的黑色节点。
+
+
+
+**对比**
+
+* AVL tress provide faster lookups than Red Black Trees because they are more strictly balanced.
+* Red Black Trees provide faster insertion and removal operations than AVL trees as fewer rotations are done due to relatively relaxed balancing.
+* AVL trees store balance factors or heights with each node, thus requires storage for and integer per node whereas Red Black Tree requires only 1 bit of informations per node.
+* Red Black Trees are uesed in most of the language libraries like map、multimap、multisetin C++ whereas AVL trees are used in databases where faster retrievals are required. 
+
+
+
+[我画了近百张图来理解红黑树](https://www.jianshu.com/p/cc34ca0e219c)
+
+
+
+
 
